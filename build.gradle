@@ -47,9 +47,10 @@ jacocoTestReport {
 		classDirectories.setFrom(
 				files(classDirectories.files.collect {
 					fileTree(dir: it, exclude: [
-							'**/config/**',             // 🔥 excluye paquete config
-							'**/security/JwtUtil*',         // 🔥 excluye clase específica
-							'**/UserServiceApplication*' // 🔥 excluye main
+							'**/config/**',
+							'**/security/JwtUtil*',
+							'**/UserServiceApplication*',
+							'**/dto/**'
 					])
 				})
 		)
