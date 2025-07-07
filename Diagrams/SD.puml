@@ -1,0 +1,25 @@
+@startuml
+actor Client
+participant UserController
+participant UserService
+participant JwtUtil
+
+== Sign-Up ==
+
+Client -> UserController : POST /sign-up (userRequest)
+UserController -> UserService : createUser(userRequest)
+UserService -> JwtUtil : generateToken(email)
+JwtUtil --> UserService : token
+UserService --> UserController : userResponse
+UserController --> Client : HTTP 201 Created + userResponse
+
+== Login ==
+
+Client -> UserController : POST /login (Authorization: Bearer token)
+UserController -> UserService : getUser(token)
+UserService -> JwtUtil : isValidToken(token)
+JwtUtil --> UserService : true / false
+UserService --> UserController : userResponse
+UserController --> Client : HTTP 200 OK + userResponse
+
+@enduml
