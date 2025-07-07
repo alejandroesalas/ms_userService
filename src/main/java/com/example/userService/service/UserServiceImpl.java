@@ -74,7 +74,7 @@ public class UserServiceImpl implements IUserService {
                 .name(user.getName())
                 .email(user.getEmail())
                 .password(user.getPassword())
-                .phones(user.getPhones())
+                .phoneList(user.getPhones())
                 .build();
     }
 }

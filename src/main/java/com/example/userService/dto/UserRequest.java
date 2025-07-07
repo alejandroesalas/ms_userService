@@ -22,7 +22,7 @@ public class UserRequest {
     @NotNull
     private String email;
 
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=(?:.*\\d.*){2})[A-Za-z\\d]{8,12}$")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=(?:.*\\d.*){2})[A-Za-z\\d]{8,12}$", message = "{password.format}")
     @NotNull
     private String password;
 

@@ -1,6 +1,7 @@
 package com.example.userService.dto;
 
 import com.example.userService.entity.Phone;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,5 +26,6 @@ public class UserResponse {
     private String name;
     private String email;
     private String password;
-    private List<Phone> phones;
+    @JsonProperty("phones")
+    private List<Phone> phoneList;
 }

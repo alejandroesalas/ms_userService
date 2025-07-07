@@ -20,6 +20,6 @@ public class Phone {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long number;
-    private Integer citycode;
-    private String contrycode;
+    private Integer cityCode;
+    private String countryCode;
 }
