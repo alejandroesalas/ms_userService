@@ -1,6 +1,7 @@
 package com.example.userService.dto;
 
 import com.example.userService.entity.Phone;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @Getter
 @Builder
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserResponse {
     private UUID id;
     private LocalDateTime created;
@@ -27,5 +29,5 @@ public class UserResponse {
     private String email;
     private String password;
     @JsonProperty("phones")
-    private List<Phone> phoneList;
+    private List<PhoneDto> phoneList;
 }

@@ -2,17 +2,16 @@ package com.example.userService.service;
 
 import com.example.userService.dto.UserRequest;
 import com.example.userService.dto.UserResponse;
-import com.example.userService.entity.User;
 import com.example.userService.exceptions.UserAlreadyExistException;
 import com.example.userService.exceptions.UserNotFoundException;
 import com.example.userService.repository.UserRepository;
 import com.example.userService.security.JwtUtil;
+import com.example.userService.factory.UserServiceDtoFactory;
+import com.example.userService.factory.UserServiceFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -20,31 +19,23 @@ public class UserServiceImpl implements IUserService {
 
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
-    private final PasswordEncoder encoder;
+    private final UserServiceFactory userServiceFactory;
+    private final UserServiceDtoFactory userServiceDtoFactory;
 
     @Override
     public UserResponse createUser(UserRequest request) {
+
         userRepository.findByEmail(request.getEmail())
-                .ifPresent(u -> {
+                .ifPresent(user -> {
                     throw new UserAlreadyExistException();
                 });
 
-        var user = new User();
-        user.setId(UUID.randomUUID());
-        user.setEmail(request.getEmail());
-        user.setPassword(encoder.encode(request.getPassword()));
-        user.setName(request.getName());
-        user.setCreated(LocalDateTime.now());
-        user.setLastLogin(LocalDateTime.now());
-        user.setActive(true);
-        user.setPhones(request.getPhones());
-
+        var user = userServiceFactory.from(request);
         var token = jwtUtil.generateToken(user.getEmail());
         user.setToken(token);
+        var savedUser = userRepository.save(user);
 
-        userRepository.save(user);
-
-        return mapToResponse(user);
+        return this.userServiceDtoFactory.toCreateResponse(savedUser);
     }
 
     @Override
@@ -60,21 +51,6 @@ public class UserServiceImpl implements IUserService {
         user.setToken(newToken);
 
         userRepository.save(user);
-        return mapToResponse(user);
-    }
-
-    public UserResponse mapToResponse(User user) {
-
-        return UserResponse.builder()
-                .id(user.getId())
-                .created(user.getCreated())
-                .lastLogin(user.getLastLogin())
-                .token(user.getToken())
-                .isActive(user.isActive())
-                .name(user.getName())
-                .email(user.getEmail())
-                .password(user.getPassword())
-                .phoneList(user.getPhones())
-                .build();
+        return this.userServiceDtoFactory.toLoginResponse(user);
     }
 }

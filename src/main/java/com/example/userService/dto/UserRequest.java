@@ -1,6 +1,5 @@
 package com.example.userService.dto;
 
-import com.example.userService.entity.Phone;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,7 +24,6 @@ public class UserRequest {
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=(?:.*\\d.*){2})[A-Za-z\\d]{8,12}$", message = "{password.format}")
     @NotNull
     private String password;
-
     private String name;
-    private List<Phone> phones;
+    private List<PhoneDto> phones;
 }

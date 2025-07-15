@@ -6,9 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.UUID;
 
 @Entity
 @AllArgsConstructor
@@ -16,9 +15,9 @@ import javax.persistence.Id;
 @Getter
 @Setter
 public class Phone {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
     private Long number;
     private Integer cityCode;
     private String countryCode;
