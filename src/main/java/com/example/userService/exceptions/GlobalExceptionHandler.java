@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
         var errorDetail = new ErrorResponse.ErrorDetail(
                 Instant.now(),
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Something went wrong"
+                "Internal error: something went wrong"
         );
         return new ResponseEntity<>(new ErrorResponse(List.of(errorDetail)), HttpStatus.INTERNAL_SERVER_ERROR);
     }

@@ -34,9 +34,9 @@ public class UserServiceImpl implements IUserService {
         var user = userServiceFactory.from(request);
         var token = jwtUtil.generateToken(user.getEmail());
         user.setToken(token);
-        var savedUser = userRepository.save(user);
+        userRepository.save(user);
 
-        return this.userServiceDtoFactory.toCreateResponse(savedUser);
+        return this.userServiceDtoFactory.toCreateResponse(user);
     }
 
     @Override
