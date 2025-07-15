@@ -10,6 +10,7 @@ import com.example.userService.factory.UserServiceDtoFactory;
 import com.example.userService.factory.UserServiceFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import utils.JwtHelper;
 
 import java.time.LocalDateTime;
 
@@ -41,14 +42,12 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserResponse login(String authHeader) {
 
-        var token = authHeader.replace("Bearer ", "");
-        var email = jwtUtil.getUsernameFromToken(token);
+        var email = jwtUtil.getUsernameFromToken(JwtHelper.getTokenFromBearer(authHeader));
         var user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
         user.setLastLogin(LocalDateTime.now());
-        var newToken = jwtUtil.generateToken(email);
-        user.setToken(newToken);
+        user.setToken(jwtUtil.generateToken(email));
 
         userRepository.save(user);
         return this.userServiceDtoFactory.toLoginResponse(user);

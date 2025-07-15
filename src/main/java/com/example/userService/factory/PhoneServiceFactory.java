@@ -6,15 +6,16 @@ import com.example.userService.entity.Phone;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class PhoneServiceFactory {
 
-    public static List<Phone> fromDtoList(List<PhoneDto> phoneDtoList){
+    public static Set<Phone> fromDtoList(Set<PhoneDto> phoneDtoList){
 
         return Optional.ofNullable(phoneDtoList)
-                .orElse(Collections.emptyList())
+                .orElse(Collections.emptySet())
                 .stream()
                 .map(dto -> {
                     Phone phone = new Phone();
@@ -24,18 +25,18 @@ public class PhoneServiceFactory {
                     phone.setCountryCode(dto.getCountryCode());
                     return phone;
                 })
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
-    public static List<PhoneDto> toDtoList(List<Phone> phoneList) {
+    public static Set<PhoneDto> toDtoList(Set<Phone> phoneList) {
         return Optional.ofNullable(phoneList)
-                .orElse(Collections.emptyList())
+                .orElse(Collections.emptySet())
                 .stream()
                 .map(dto -> PhoneDto.builder()
                         .number(dto.getNumber())
                         .countryCode(dto.getCountryCode())
                         .cityCode(dto.getCityCode())
                         .build())
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 }

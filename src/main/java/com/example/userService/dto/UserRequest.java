@@ -9,7 +9,7 @@ import lombok.Setter;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,5 +25,5 @@ public class UserRequest {
     @NotNull
     private String password;
     private String name;
-    private List<PhoneDto> phones;
+    private Set<PhoneDto> phones;
 }

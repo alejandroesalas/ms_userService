@@ -11,6 +11,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -29,5 +30,5 @@ public class UserResponse {
     private String email;
     private String password;
     @JsonProperty("phones")
-    private List<PhoneDto> phoneList;
+    private Set<PhoneDto> phoneList;
 }

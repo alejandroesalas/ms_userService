@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/user")
@@ -28,7 +29,7 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public ResponseEntity<UserResponse> login(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<UserResponse> login(@NotNull @RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(userService.login(token));
     }
 }
