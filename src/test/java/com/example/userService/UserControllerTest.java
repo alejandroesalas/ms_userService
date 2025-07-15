@@ -3,6 +3,7 @@ package com.example.userService;
 import com.example.userService.controller.UserController;
 import com.example.userService.exceptions.UserAlreadyExistException;
 import com.example.userService.exceptions.UserNotFoundException;
+import com.example.userService.security.JwtUtil;
 import com.example.userService.service.IUserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -30,6 +31,8 @@ class UserControllerTest {
 
     @MockBean
     private IUserService userService;
+    @MockBean
+    private JwtUtil jwtUtil;
 
     @Test
     void shouldReturnBadRequestWhenUserAlreadyExists() throws Exception {
@@ -38,7 +41,7 @@ class UserControllerTest {
 
         Mockito.when(userService.createUser(Mockito.any())).thenThrow(new UserAlreadyExistException());
 
-        mockMvc.perform(post("/sign-up")
+        mockMvc.perform(post("/user/sign-up")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isBadRequest())
@@ -52,7 +55,7 @@ class UserControllerTest {
 
         Mockito.when(userService.createUser(Mockito.any())).thenThrow(new UserAlreadyExistException());
 
-        mockMvc.perform(post("/sign-up")
+        mockMvc.perform(post("/user/sign-up")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isBadRequest())
@@ -67,7 +70,7 @@ class UserControllerTest {
 
         Mockito.when(userService.createUser(Mockito.any())).thenThrow(new RuntimeException("something went wrong"));
 
-        mockMvc.perform(post("/sign-up")
+        mockMvc.perform(post("/user/sign-up")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isInternalServerError())
@@ -82,7 +85,7 @@ class UserControllerTest {
 
         Mockito.when(userService.login(Mockito.any())).thenThrow(new UserNotFoundException());
 
-        mockMvc.perform(get("/login")
+        mockMvc.perform(get("/user/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization","Bearer token"))
                 .andExpect(status().isNotFound());

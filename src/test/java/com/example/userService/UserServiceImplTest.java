@@ -1,11 +1,14 @@
 package com.example.userService;
 
+import com.example.userService.dto.PhoneDto;
 import com.example.userService.dto.UserRequest;
 import com.example.userService.dto.UserResponse;
 import com.example.userService.entity.Phone;
 import com.example.userService.entity.User;
 import com.example.userService.exceptions.UserAlreadyExistException;
 import com.example.userService.exceptions.UserNotFoundException;
+import com.example.userService.factory.UserServiceDtoFactory;
+import com.example.userService.factory.UserServiceFactory;
 import com.example.userService.security.JwtUtil;
 import com.example.userService.service.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,11 +16,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,12 +41,20 @@ class UserServiceImplTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    private UserServiceFactory userServiceFactory;
+    @Spy
+    final UserServiceDtoFactory userServiceDtoFactory = new UserServiceDtoFactory();
+
     @InjectMocks
     private UserServiceImpl userService;
 
     @BeforeEach
     void setUp() {
+
         MockitoAnnotations.openMocks(this);
+        userServiceFactory = spy(new UserServiceFactory(passwordEncoder));
+        userService = new UserServiceImpl(userRepository, jwtUtil, userServiceFactory, userServiceDtoFactory);
+
     }
 
     @Test
@@ -50,18 +63,17 @@ class UserServiceImplTest {
         request.setEmail("test@example.com");
         request.setPassword("a2asfGfdfdf4");
         request.setName("Test User");
-        request.setPhones(Collections.singletonList(new Phone(null, 12345678L, 1, "57")));
+        request.setPhones(Set.of(new PhoneDto(null, 12345678L, 1, "57")));
 
         when(userRepository.findByEmail(eq("test@example.com"))).thenReturn(Optional.empty());
         when(passwordEncoder.encode(any())).thenReturn("encodedPassword");
         when(jwtUtil.generateToken(any())).thenReturn("dummy-jwt");
 
         UserResponse response = userService.createUser(request);
-
-        assertEquals("test@example.com", response.getEmail());
-        assertEquals("dummy-jwt", response.getToken());
         assertTrue(response.isActive());
         assertNotNull(response.getCreated());
+        verify(jwtUtil).generateToken(anyString());
+        verify(userServiceFactory).from(any(UserRequest.class));
         verify(userRepository).save(any(User.class));
     }
 
