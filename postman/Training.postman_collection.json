@@ -1,0 +1,69 @@
+{
+	"info": {
+		"_postman_id": "005a4a2e-c003-40bf-9eb3-16d3a1964edf",
+		"name": "Training",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9000085"
+	},
+	"item": [
+		{
+			"name": "USerService Sing in",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Alejandro Lopez\",\r\n  \"email\": \"alejandroesalas1@gmail.com\",\r\n  \"password\": \"a2asfGfdfdf4\",\r\n  \"phones\": [\r\n    {\r\n      \"number\": 3227432220,\r\n      \"cityCode\": 1,\r\n      \"countryCode\": \"57\"\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/user/sign-up",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"sign-up"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGVqYW5kcm9lc2FsYXMxQGdtYWlsLmNvbSIsImlhdCI6MTc1MjU0MjI4NywiZXhwIjoxNzUyNTQ1ODg3fQ.OdspJbXBp-w_Rt3vwNiSlIlIRpiRvzSHyKKmXf3RxAA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/user/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

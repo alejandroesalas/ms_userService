@@ -34,3 +34,7 @@ cd ms-userService
 
 # 2. Compila y construye el proyecto
 ./gradlew build
+
+## 🧪 Colección de Postman
+
+📁 [`postman/Training.postman_collection.json)
