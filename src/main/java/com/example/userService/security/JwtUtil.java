@@ -19,24 +19,49 @@ import java.time.Instant;
 import java.util.Base64;
 import java.util.Date;
 
+/**
+ * Utility class for managing JSON Web Tokens (JWT).
+ * <p>
+ * This class is responsible for:
+ * <ul>
+ *     <li>Generating JWT tokens with HMAC-SHA256 signature.</li>
+ *     <li>Extracting claims such as the user's email from tokens.</li>
+ *     <li>Validating tokens (checking for expiration, integrity, format, etc.).</li>
+ * </ul>
+ * Requires the configuration properties {@code jwt.secret} and {@code jwt.expiration}.
+ */
 @Slf4j
 @Component
 public class JwtUtil {
 
+    /** Base64-encoded secret key from application properties. */
     @Value("${jwt.secret}")
     private String secret;
 
+    /** Token expiration time in milliseconds. */
     @Value("${jwt.expiration}")
     private long expiration;
 
+    /** Decoded secret key used to sign and verify tokens. */
     private SecretKey secretKey;
 
+
+    /**
+     * Initializes the secret key after the component is constructed.
+     * <p>This method is called automatically after property injection using {@code @PostConstruct}.</p>
+     */
     @PostConstruct
     public void init() {
         byte[] decodedKey = Base64.getDecoder().decode(secret);
         secretKey = Keys.hmacShaKeyFor(decodedKey);
     }
 
+    /**
+     * Generates a JWT token for a given user email.
+     *
+     * @param email the user's email to set as the subject of the token
+     * @return a signed JWT token string with issued and expiration dates
+     */
     public String generateToken(String email) {
         var now = Instant.now();
         var expiry = now.plusMillis(expiration);
@@ -49,6 +74,13 @@ public class JwtUtil {
                 .compact();
     }
 
+    /**
+     * Extracts the username (email) from a JWT token.
+     *
+     * @param token the JWT token
+     * @return the subject (username/email) stored in the token
+     * @throws JwtException if the token is invalid or parsing fails
+     */
     public String getUsernameFromToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(secretKey)
@@ -58,6 +90,12 @@ public class JwtUtil {
                 .getSubject();
     }
 
+    /**
+     * Validates a given JWT token by checking its signature, structure, and expiration.
+     *
+     * @param token the JWT token to validate
+     * @return {@code true} if the token is valid; {@code false} otherwise
+     */
     public boolean isValidToken(String token) {
         try {
             Jws<Claims> claimsJws = Jwts.parserBuilder()
